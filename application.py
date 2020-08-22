@@ -102,6 +102,7 @@ def init_db():
     return "DB created!"
 
 
+
 @app.route('/mass_load', methods=['POST', 'GET'])
 def mass_load_images():
     image_data_path = "./data/images/"
@@ -141,6 +142,62 @@ def search_by_attribute(attributes):
     # conn.enable_load_extension(True)
     result = conn.execute(sql_query)
     result
+
+
+@app.route('/init_big_table', methods=['POST', 'GET'])
+def init_big_table():
+    sql_create_table = """ CREATE TABLE IF NOT EXISTS TB_BIG_TABLE (
+                                          IMAGE_ID text NOT NULL,
+                                          personalLess30 int default 0, personalLess45 int default 0, 
+                                          personalLess60 int default 0, personalLarger60 int default 0, 
+                                          carryingBackpack int default 0, carryingOther int default 0, 
+                                          lowerBodyCasual int default 0, upperBodyCasual int default 0,
+                                          lowerBodyFormal int default 0, upperBodyFormal int default 0,
+                                          
+    accessoryHat int default 0, upperBodyJacket int default 0, lowerBodyJeans int default 0,
+    footwearLeatherShoes int default 0, upperBodyLogo int default 0, hairLong int default 0, 
+    personalMale int default 0, carryingMessengerBag int default 0, accessoryMuffler int default 0,
+    accessoryNothing int default 0, carryingNothing int default 0, upperBodyPlaid int default 0,
+    carryingPlasticBags int default 0, footwearSandals int default 0, footwearShoes int default 0,
+    lowerBodyShorts int default 0, upperBodyShortSleeve int default 0, lowerBodyShortSkirt int default 0,
+    footwearSneaker int default 0, upperBodyThinStripes int default 0, accessorySunglasses int default 0,
+    lowerBodyTrousers int default 0, upperBodyTshirt int default 0, upperBodyOther  int default 0,
+ 
+  upperBodyVNeck int default 0, upperBodyBlack int default 0, upperBodyBlue int default 0,
+    upperBodyBrown int default 0, upperBodyGreen int default 0, upperBodyGrey int default 0,
+    upperBodyOrange int default 0, upperBodyPink int default 0, upperBodyPurple int default 0,
+    upperBodyRed int default 0, upperBodyWhite int default 0, upperBodyYellow int default 0,
+    lowerBodyBlack int default 0, lowerBodyBlue int default 0, lowerBodyBrown int default 0,
+    lowerBodyGreen int default 0, lowerBodyGrey int default 0, lowerBodyOrange int default 0,
+    lowerBodyPink int default 0, lowerBodyPurple int default 0, lowerBodyRed int default 0,
+    lowerBodyWhite int default 0, lowerBodyYellow int default 0, hairBlack int default 0,
+    hairBlue int default 0, hairBrown int default 0, hairGreen int default 0,
+    hairGrey int default 0, hairOrange int default 0, hairPink int default 0,
+    hairPurple int default 0, hairRed int default 0, hairWhite int default 0,
+    
+    hairYellow int default 0, footwearBlack int default 0, footwearBlue int default 0,
+    footwearBrown int default 0, footwearGreen int default 0, footwearGrey int default 0,
+    footwearOrange int default 0, footwearPink int default 0, footwearPurple int default 0,
+    footwearRed int default 0, footwearWhite int default 0, footwearYellow int default 0,
+    accessoryHeadphone int default 0, personalLess15 int default 0, carryingBabyBuggy int default 0,
+    hairBald int default 0, footwearBoots int default 0, lowerBodyCapri int default 0,
+
+    carryingShoppingTro int default 0, carryingUmbrella int default 0, personalFemale int default 0,
+    carryingFolder int default 0, accessoryHairBand int default 0, lowerBodyHotPants int default 0,
+    accessoryKerchief int default 0, lowerBodyLongSkirt int default 0, upperBodyLongSleeve int default 0,
+    lowerBodyPlaid int default 0, lowerBodyThinStripes int default 0, carryingLuggageCase int default 0,
+    upperBodyNoSleeve int default 0, hairShort int default 0, footwearStocking int default 0,
+    upperBodySuit int default 0, carryingSuitcase int default 0, lowerBodySuits int default 0,
+    upperBodySweater int default 0, upperBodyThickStripes int default 0, carryingBlack int default 0,
+    carryingBlue int default 0, carryingBrown int default 0, carryingGreen int default 0,
+    carryingGrey int default 0, carryingOrange int default 0, carryingPink int default 0,
+    carryingPurple int default 0, carryingRed int default 0, carryingWhite int default 0,
+    carryingYellow int default 0,  
+                                          TIME_STAMP text NOT NULL
+                                      ); """
+
+    update_db(sql_create_table)
+    return "DB created!"
 
 
 if __name__ == "__main__":
