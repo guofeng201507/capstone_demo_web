@@ -86,6 +86,16 @@ def upload_image():
 @app.route('/display/<filename>')
 def display_image(filename):
     result = model.predict_image(filename)
+
+    detected_attributes = {k: v for k, v in result.items() if v > 0.5}
+    df2 = pd.DataFrame({k: [v] for k, v in result.items()})
+    df2['image_id'] = filename
+    df2['TIME_STAMP'] = datetime.now()
+    df2['attributes'] = json.dumps(detected_attributes)
+
+    conn = get_db()
+    df2.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
+
     output_filename = filename[:-4] + '_predicted.png'
     # print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='uploads/' + output_filename), code=301)

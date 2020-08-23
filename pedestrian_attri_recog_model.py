@@ -77,6 +77,8 @@ class AttrRecogModel:
         if torch.cuda.is_available():
             model = torch.nn.DataParallel(model).cuda()
 
+        # model.to(torch.device('cpu'))
+
         ckpt = torch.load(save_model_path)
         model.load_state_dict(ckpt['state_dicts'])
         model.eval()
