@@ -91,37 +91,10 @@ def display_image(filename):
     return redirect(url_for('static', filename='uploads/' + output_filename), code=301)
 
 
-@app.route('/init', methods=['POST', 'GET'])
-def init_db():
-    sql_create_table = """ CREATE TABLE IF NOT EXISTS TB_CASE (
-                                          IMAGE_ID text NOT NULL,
-                                          ATTRIBUTES json NOT NULL,
-                                          TIME_STAMP text NOT NULL
-                                      ); """
-
-    update_db(sql_create_table)
-    return "DB created!"
-
-
 @app.route('/mass_load', methods=['POST', 'GET'])
 def mass_load_images():
     image_data_path = "./static/images/"
     image_files = [f for f in os.listdir(image_data_path) if f[-4:] == '.jpg' or f[-4:] == '.png']
-
-    # for f in image_files:
-    #     print("Loading image " + f)
-    #     image_file = image_data_path + f
-    #     result = model.predict_image_general(image_file)
-    #     detected_attributes = {k: [v] for k, v in result.items() if v > 0.5}
-    #     info = {}
-    #     info[f] = detected_attributes
-    #     attr_json = json.dumps(info)
-    #
-    #     image_id = f
-    #     date_stamp = datetime.now()
-    #
-    #     tmp_list = [image_id, attr_json, date_stamp]
-    #     update_db("REPLACE INTO TB_CASE (IMAGE_ID, attributes, time_stamp) VALUES (?,?,?);", tmp_list)
 
     df = pd.DataFrame()
 
@@ -129,38 +102,20 @@ def mass_load_images():
         print(f)
         image_file = image_data_path + f
         result = model.predict_image_general(image_file)
+        detected_attributes = {k: v for k, v in result.items() if v > 0.5}
         df2 = pd.DataFrame({k: [v] for k, v in result.items()})
         df2['image_id'] = f
         df2['TIME_STAMP'] = datetime.now()
+        df2['attributes'] = json.dumps(detected_attributes)
         if df.empty:
             df = df2
         else:
             df = df.append(df2, ignore_index=True)
 
-    # df.to_csv(image_data_path + '_annotated.csv')
     conn = get_db()
     df.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
 
     return 'Done!'
-
-
-@app.route("/search_by_attribute/<attributes>", methods=['GET'])
-def search_by_attribute(attributes):
-    query_str = "%".join(attributes)
-    query_str = "%" + query_str + "%"
-
-    sql_query = """
-    SELECT IMAGE_ID, ATTRIBUTES
-        FROM TB_CASE, json_each(ATTRIBUTES)
-        WHERE
-            json_each.value LIKE '%personalLess30%personalMale%upperBodyBlack%lowerBodyBlue%';
-    """
-
-    conn = get_db()
-    # conn.enable_load_extension(True)
-    result = conn.execute(sql_query)
-    result
-
 
 @app.route('/init_big_table', methods=['POST', 'GET'])
 def init_big_table():
@@ -238,14 +193,14 @@ def search():
 
     condition_string = " and ".join(new_list)
 
-    query = "SELECT IMAGE_ID from TB_BIG_TABLE WHERE " + condition_string
+    query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string
 
     rows = query_db(query)
     result = []
     for row in rows:
-        result.append(row[0])
+        result.append(row)
 
-    return render_template('image_search_result.html', filenames=result)
+    return render_template('image_search_result.html', images_info=result)
 
 
 @app.route('/display_returned_images/<filename>')

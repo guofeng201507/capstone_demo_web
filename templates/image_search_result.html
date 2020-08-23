@@ -6,15 +6,16 @@
 </head>
 <body>
 
-<div style="width: 100%; overflow: hidden;">
-    {% for filename in filenames %}
-    <div>
-        <img src="{{ url_for('display_searched_image', filename=filename) }}">
-        {{filename}}
-
+{% for info in images_info %}
+<div style="width: 100%; display: flex;">
+    <div style="flex: 0 0 18%">
+        <img src="{{ url_for('display_searched_image', filename=info[0]) }}">
     </div>
-    {% endfor %}
+    <div style="flex: 1">
+        {{info[1]}}
+    </div>
 </div>
+{% endfor %}
 
 </body>
 </html>
