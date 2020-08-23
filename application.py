@@ -2,6 +2,7 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, flash, redirect, url_for, g
 from werkzeug.utils import secure_filename
+import pandas as pd
 from datetime import datetime, timedelta
 import json
 
@@ -102,26 +103,43 @@ def init_db():
     return "DB created!"
 
 
-
 @app.route('/mass_load', methods=['POST', 'GET'])
 def mass_load_images():
-    image_data_path = "./data/images/"
+    image_data_path = "./static/images/"
     image_files = [f for f in os.listdir(image_data_path) if f[-4:] == '.jpg' or f[-4:] == '.png']
 
+    # for f in image_files:
+    #     print("Loading image " + f)
+    #     image_file = image_data_path + f
+    #     result = model.predict_image_general(image_file)
+    #     detected_attributes = {k: [v] for k, v in result.items() if v > 0.5}
+    #     info = {}
+    #     info[f] = detected_attributes
+    #     attr_json = json.dumps(info)
+    #
+    #     image_id = f
+    #     date_stamp = datetime.now()
+    #
+    #     tmp_list = [image_id, attr_json, date_stamp]
+    #     update_db("REPLACE INTO TB_CASE (IMAGE_ID, attributes, time_stamp) VALUES (?,?,?);", tmp_list)
+
+    df = pd.DataFrame()
+
     for f in image_files:
-        print("Loading image " + f)
+        print(f)
         image_file = image_data_path + f
         result = model.predict_image_general(image_file)
-        detected_attributes = {k: [v] for k, v in result.items() if v > 0.5}
-        info = {}
-        info[f] = detected_attributes
-        attr_json = json.dumps(info)
+        df2 = pd.DataFrame({k: [v] for k, v in result.items()})
+        df2['image_id'] = f
+        df2['TIME_STAMP'] = datetime.now()
+        if df.empty:
+            df = df2
+        else:
+            df = df.append(df2, ignore_index=True)
 
-        image_id = f
-        date_stamp = datetime.now()
-
-        tmp_list = [image_id, attr_json, date_stamp]
-        update_db("REPLACE INTO TB_CASE (IMAGE_ID, attributes, time_stamp) VALUES (?,?,?);", tmp_list)
+    # df.to_csv(image_data_path + '_annotated.csv')
+    conn = get_db()
+    df.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
 
     return 'Done!'
 
@@ -199,6 +217,40 @@ def init_big_table():
     update_db(sql_create_table)
     return "DB created!"
 
+
+@app.route('/search/')
+def search_by_attributes():
+    return render_template('search_screen.html')
+
+
+@app.route('/search/', methods=['POST'])
+def search():
+    selected_fields = request.form.getlist("accessory") + request.form.getlist("carrying") \
+                      + request.form.getlist("footwear") + request.form.getlist("hair") \
+                      + request.form.getlist("lowerBody") + request.form.getlist("personal") \
+                      + request.form.getlist("upperBody")
+
+    SCORE_THRESHOLD = "0.5"
+
+    new_list = []
+    for field in selected_fields:
+        new_list.append(field + " > " + SCORE_THRESHOLD)
+
+    condition_string = " and ".join(new_list)
+
+    query = "SELECT IMAGE_ID from TB_BIG_TABLE WHERE " + condition_string
+
+    rows = query_db(query)
+    result = []
+    for row in rows:
+        result.append(row[0])
+
+    return render_template('image_search_result.html', filenames=result)
+
+
+@app.route('/display_returned_images/<filename>')
+def display_searched_image(filename):
+    return redirect(url_for('static', filename='images/' + filename), code=301)
 
 if __name__ == "__main__":
     DATABASE = "./db/demo.db"

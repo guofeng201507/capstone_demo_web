@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div style="width: 100%; overflow: hidden;">
+{% for filename in filenames %}
+<div>
+    <img src="{{ url_for('display_searched_image', filename=filename) }}">
+    {{filename}}
+
+</div>
+{% endfor %}
+</div>
+
+</body>
+</html>
