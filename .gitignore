@@ -1,3 +1,4 @@
 .idea
 venv
 data/images
+trained_weights
