@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw
 from torch.autograd import Variable
 
 from config import argument_parser
-from dataset.AttrDataset import AttrDataset, get_transform
+from dataset.AttrDataset import get_transform
 from models.base_block import FeatClassifier, BaseClassifier
 from models.resnet import resnet50
 from tools.function import get_model_log_path
@@ -64,14 +64,11 @@ class AttrRecogModel:
 
         _, predict_tsfm = get_transform(args)
 
-        valid_set = AttrDataset(args=args, split=args.valid_split, transform=predict_tsfm)
-
-        # todo: not to load from .pkl file but from a file containing list of attributes
-        args.att_list = valid_set.attr_id
+        args.att_list = FULL_ATTRIBUTES
 
         backbone = resnet50()
         net_parameter = 2048
-        classifier = BaseClassifier(netpara=net_parameter, nattr=valid_set.attr_num)
+        classifier = BaseClassifier(netpara=net_parameter, nattr=len(FULL_ATTRIBUTES))
         model = FeatClassifier(backbone, classifier)
 
         FORCE_TO_CPU = True

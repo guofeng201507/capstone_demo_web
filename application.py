@@ -1,10 +1,11 @@
+import json
 import os
 import sqlite3
+from datetime import datetime
+
+import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, g
 from werkzeug.utils import secure_filename
-import pandas as pd
-from datetime import datetime, timedelta
-import json
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = './static/uploads/'
