@@ -220,17 +220,20 @@ def query_db_based_on_attributes(selected_fields):
     for field in selected_fields:
         new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
-    query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string
+    query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string + " LIMIT 20"
     rows = query_db(query)
     result = []
     for row in rows:
-        result.append(row)
+        tmp_dict = {}
+        tmp_dict['image_id'] = row[0]
+        tmp_dict['attr_list'] = list(json.loads(row[1]).keys())
+        result.append(tmp_dict)
     return result
 
 
 @app.route('/display_returned_images/<filename>')
 def display_searched_image(filename):
-    return redirect(url_for('static', filename='images/' + filename), code=301)
+    return redirect(url_for('static', filename='PA100K/' + filename), code=301)
 
 
 if __name__ == "__main__":

@@ -9,12 +9,15 @@
 {% for info in images_info %}
 <div style="width: 100%; display: flex;">
     <div style="flex: 0 0 18%">
-        <img src="{{ url_for('display_searched_image', filename=info[0]) }}">
+        <img src="{{ url_for('display_searched_image', filename=info['image_id']) }}">
     </div>
     <div style="flex: 1">
-        {{info[1]}}
+        {% for attri in info['attr_list'] %}
+            <div> {{attri}}</div>
+        {% endfor %}
     </div>
 </div>
+<hr>
 {% endfor %}
 
 </body>
