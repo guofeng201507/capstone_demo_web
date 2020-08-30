@@ -74,12 +74,14 @@ class AttrRecogModel:
         classifier = BaseClassifier(netpara=net_parameter, nattr=valid_set.attr_num)
         model = FeatClassifier(backbone, classifier)
 
-        if torch.cuda.is_available():
+        FORCE_TO_CPU = True
+        if torch.cuda.is_available() and not FORCE_TO_CPU:
             model = torch.nn.DataParallel(model).cuda()
+            ckpt = torch.load(save_model_path)
+        else:
+            model = torch.nn.DataParallel(model)
+            ckpt = torch.load(save_model_path, map_location=torch.device('cpu'))
 
-        # model.to(torch.device('cpu'))
-
-        ckpt = torch.load(save_model_path)
         model.load_state_dict(ckpt['state_dicts'])
         model.eval()
 
