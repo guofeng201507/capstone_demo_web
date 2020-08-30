@@ -73,6 +73,7 @@ def upload_image():
     if file.filename == '':
         flash('No image selected for uploading')
         return redirect(request.url)
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -89,6 +90,7 @@ def display_image(filename):
     result = model.predict_image(filename)
 
     detected_attributes = {k: v for k, v in result.items() if v > 0.5}
+
     df2 = pd.DataFrame({k: [v] for k, v in result.items()})
     df2['image_id'] = filename
     df2['TIME_STAMP'] = datetime.now()
@@ -127,6 +129,7 @@ def mass_load_images():
     df.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
 
     return 'Done!'
+
 
 @app.route('/init_big_table', methods=['POST', 'GET'])
 def init_big_table():
@@ -196,27 +199,29 @@ def search():
                       + request.form.getlist("lowerBody") + request.form.getlist("personal") \
                       + request.form.getlist("upperBody")
 
-    SCORE_THRESHOLD = "0.5"
+    result = query_db_based_on_attributes(selected_fields)
 
+    return render_template('image_search_result.html', images_info=result)
+
+
+def query_db_based_on_attributes(selected_fields):
+    SCORE_THRESHOLD = "0.5"
     new_list = []
     for field in selected_fields:
         new_list.append(field + " > " + SCORE_THRESHOLD)
-
     condition_string = " and ".join(new_list)
-
     query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string
-
     rows = query_db(query)
     result = []
     for row in rows:
         result.append(row)
-
-    return render_template('image_search_result.html', images_info=result)
+    return result
 
 
 @app.route('/display_returned_images/<filename>')
 def display_searched_image(filename):
     return redirect(url_for('static', filename='images/' + filename), code=301)
+
 
 if __name__ == "__main__":
     DATABASE = "./db/demo.db"
