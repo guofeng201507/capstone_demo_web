@@ -2,6 +2,7 @@ import json
 import os
 import sqlite3
 from datetime import datetime
+import time
 
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, g
@@ -9,6 +10,8 @@ from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = './static/uploads/'
+
+SCORE_THRESHOLD = 0.5
 
 
 # https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
@@ -89,15 +92,15 @@ def upload_image():
 def display_image(filename):
     result = model.predict_image(filename)
 
-    detected_attributes = {k: v for k, v in result.items() if v > 0.5}
+    detected_attributes = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
 
     df2 = pd.DataFrame({k: [v] for k, v in result.items()})
     df2['image_id'] = filename
     df2['TIME_STAMP'] = datetime.now()
     df2['attributes'] = json.dumps(detected_attributes)
 
-    conn = get_db()
-    df2.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
+    # conn = get_db()
+    # df2.to_sql('TB_BIG_TABLE_DEMO', conn, if_exists='replace', index=False)
 
     output_filename = filename[:-4] + '_predicted.png'
     # print('display_image filename: ' + filename)
@@ -106,8 +109,12 @@ def display_image(filename):
 
 @app.route('/mass_load', methods=['POST', 'GET'])
 def mass_load_images():
-    image_data_path = "./static/images/"
+    start = time.time()
+    image_data_path = "./static/PA100K/"
+
     image_files = [f for f in os.listdir(image_data_path) if f[-4:] == '.jpg' or f[-4:] == '.png']
+
+    print(f'Mass loading started for {len(image_files)} images')
 
     df = pd.DataFrame()
 
@@ -115,7 +122,8 @@ def mass_load_images():
         print(f)
         image_file = image_data_path + f
         result = model.predict_image_general(image_file)
-        detected_attributes = {k: v for k, v in result.items() if v > 0.5}
+        detected_attributes = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
+
         df2 = pd.DataFrame({k: [v] for k, v in result.items()})
         df2['image_id'] = f
         df2['TIME_STAMP'] = datetime.now()
@@ -126,14 +134,17 @@ def mass_load_images():
             df = df.append(df2, ignore_index=True)
 
     conn = get_db()
-    df.to_sql('TB_BIG_TABLE', conn, if_exists='replace', index=False)
+    df.to_sql('TB_BIG_TABLE_DEMO', conn, if_exists='replace', index=False)
+    end = time.time()
+
+    print(f'Mass loading completed, took {end - start} seconds')
 
     return 'Done!'
 
 
 @app.route('/init_big_table', methods=['POST', 'GET'])
 def init_big_table():
-    sql_create_table = """ CREATE TABLE IF NOT EXISTS TB_BIG_TABLE (
+    sql_create_table = """ CREATE TABLE IF NOT EXISTS TB_BIG_TABLE_DEMO (
                                           IMAGE_ID text NOT NULL,
                                           personalLess30 int default 0, personalLess45 int default 0, 
                                           personalLess60 int default 0, personalLarger60 int default 0, 
@@ -205,10 +216,9 @@ def search():
 
 
 def query_db_based_on_attributes(selected_fields):
-    SCORE_THRESHOLD = "0.5"
     new_list = []
     for field in selected_fields:
-        new_list.append(field + " > " + SCORE_THRESHOLD)
+        new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
     query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string
     rows = query_db(query)

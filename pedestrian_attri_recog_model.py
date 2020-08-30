@@ -44,7 +44,6 @@ FULL_ATTRIBUTES = ["personalLess30", "personalLess45", "personalLess60", "person
 class AttrRecogModel:
     def __init__(self):
         parser = argument_parser()
-        parser.add_argument('--dataset', type=str, default='PETA', choices=['peta', 'rap', 'pa100k'])
         args = parser.parse_args()
 
         visenv_name = 'PETA'
@@ -60,7 +59,6 @@ class AttrRecogModel:
         pprint.pprint(OrderedDict(args.__dict__))
 
         print('-' * 60)
-        print(f'use GPU{args.device} for training')
 
         _, predict_tsfm = get_transform(args)
 
@@ -75,9 +73,11 @@ class AttrRecogModel:
         if torch.cuda.is_available() and not FORCE_TO_CPU:
             model = torch.nn.DataParallel(model).cuda()
             ckpt = torch.load(save_model_path)
+            print(f'Model is served with GPU ')
         else:
             model = torch.nn.DataParallel(model)
             ckpt = torch.load(save_model_path, map_location=torch.device('cpu'))
+            print(f'Model is served with CPU ')
 
         model.load_state_dict(ckpt['state_dicts'])
         model.eval()
@@ -142,9 +142,7 @@ class AttrRecogModel:
         for idx in range(len(self.args.att_list)):
             orgin_score = score[0, idx]
             sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
-            # if score[0, idx] >= 0:
-            #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
-            # print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
+
             result[self.args.att_list[idx]] = sigmoid_score
 
         return result
