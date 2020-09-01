@@ -99,7 +99,10 @@ class AttrRecogModel:
         img = Image.open(path + input_image)
         img_trans = self.predict_tsfm(img)
         img_trans = torch.unsqueeze(img_trans, dim=0)
-        img_var = Variable(img_trans).cuda()
+        if torch.cuda.is_available() and not FORCE_TO_CPU:
+            img_var = Variable(img_trans).cuda()
+        else:
+            img_var = Variable(img_trans)
         score = self.model(img_var).data.cpu().numpy()
 
         # show the score in command line
@@ -134,7 +137,10 @@ class AttrRecogModel:
         img = Image.open(input_image_full_path)
         img_trans = self.predict_tsfm(img)
         img_trans = torch.unsqueeze(img_trans, dim=0)
-        img_var = Variable(img_trans).cuda()
+        if torch.cuda.is_available() and not FORCE_TO_CPU:
+            img_var = Variable(img_trans).cuda()
+        else:
+            img_var = Variable(img_trans)
         score = self.model(img_var).data.cpu().numpy()
 
         # show the score in command line
