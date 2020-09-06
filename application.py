@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = './static/uploads/'
 
-SCORE_THRESHOLD = 0.5
+SCORE_THRESHOLD = 0.8
 
 
 # https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
@@ -62,12 +62,12 @@ def close_connection(exception):
         db.close()
 
 
-@app.route('/')
+@app.route('/upload')
 def upload_form():
     return render_template('upload.html')
 
 
-@app.route('/', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_image():
     if 'file' not in request.files:
         flash('No file part')
@@ -82,7 +82,12 @@ def upload_image():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # print('upload_image filename: ' + filename)
         flash('Image successfully uploaded and displayed')
-        return render_template('upload.html', filename=filename)
+
+        result = model.predict_image(filename)
+
+        detected_attributes = list({k: v for k, v in result.items() if v > SCORE_THRESHOLD}.keys())
+
+        return render_template('upload.html', filename=filename, attributes=detected_attributes)
     else:
         flash('Allowed image types are -> png, jpg, jpeg, gif')
         return redirect(request.url)
@@ -90,15 +95,6 @@ def upload_image():
 
 @app.route('/display/<filename>')
 def display_image(filename):
-    result = model.predict_image(filename)
-
-    detected_attributes = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
-
-    df2 = pd.DataFrame({k: [v] for k, v in result.items()})
-    df2['image_id'] = filename
-    df2['TIME_STAMP'] = datetime.now()
-    df2['attributes'] = json.dumps(detected_attributes)
-
     # conn = get_db()
     # df2.to_sql('TB_BIG_TABLE_DEMO', conn, if_exists='replace', index=False)
 
@@ -209,6 +205,16 @@ def search():
                       + request.form.getlist("footwear") + request.form.getlist("hair") \
                       + request.form.getlist("lowerBody") + request.form.getlist("personal") \
                       + request.form.getlist("upperBody")
+
+    result = query_db_based_on_attributes(selected_fields)
+
+    return render_template('image_search_result.html', images_info=result)
+
+
+@app.route('/search_by_image/', methods=['POST'])
+def search_by_image():
+    selected_fields_string = request.form.get("attributes")
+    selected_fields = json.loads(selected_fields_string.replace('\'', '\"'))
 
     result = query_db_based_on_attributes(selected_fields)
 
