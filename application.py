@@ -237,7 +237,7 @@ def query_db_based_on_attributes(selected_fields):
     for field in selected_fields[:5]:
         new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
-    query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string + " LIMIT 20"
+    query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE_DEMO WHERE " + condition_string + " LIMIT 20"
     rows = query_db(query)
     result = []
     for row in rows:
@@ -254,6 +254,6 @@ def display_searched_image(filename):
 
 
 if __name__ == "__main__":
-    DATABASE = "./db/demo.db"
+    DATABASE = "./db/demo_new.db"
 
     app.run()
