@@ -3,6 +3,7 @@ import os
 import sqlite3
 from datetime import datetime
 import time
+from tqdm import tqdm
 
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, g
@@ -119,8 +120,10 @@ def mass_load_images():
 
     df = pd.DataFrame()
 
-    for f in image_files:
-        print(f)
+    conn = get_db()
+
+    i = 0
+    for f in tqdm(image_files):
         image_file = image_data_path + f
         result = model.predict_image_general(image_file)
         detected_attributes = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
@@ -133,9 +136,12 @@ def mass_load_images():
             df = df2
         else:
             df = df.append(df2, ignore_index=True)
+        i = i + 1
+        if i % 2000 == 0:
+            df.to_sql('TB_BIG_TABLE_DEMO', conn, if_exists='append', index=False)
+            df = pd.DataFrame(columns=df.columns)
+            print(f'2000 rows saved to DB')
 
-    conn = get_db()
-    df.to_sql('TB_BIG_TABLE_DEMO', conn, if_exists='replace', index=False)
     end = time.time()
 
     print(f'Mass loading completed, took {end - start} seconds')
@@ -191,7 +197,7 @@ def init_big_table():
     carryingBlue int default 0, carryingBrown int default 0, carryingGreen int default 0,
     carryingGrey int default 0, carryingOrange int default 0, carryingPink int default 0,
     carryingPurple int default 0, carryingRed int default 0, carryingWhite int default 0,
-    carryingYellow int default 0,  
+    carryingYellow int default 0,  attributes text,
                                           TIME_STAMP text NOT NULL
                                       ); """
 
