@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = './static/uploads/'
 
-SCORE_THRESHOLD = 0.8
+SCORE_THRESHOLD = 0.5
 
 
 # https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
@@ -60,6 +60,11 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
 @app.route('/upload')
@@ -223,7 +228,7 @@ def search_by_image():
 
 def query_db_based_on_attributes(selected_fields):
     new_list = []
-    for field in selected_fields:
+    for field in selected_fields[:5]:
         new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
     query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE WHERE " + condition_string + " LIMIT 20"

@@ -40,6 +40,8 @@ FULL_ATTRIBUTES = ["personalLess30", "personalLess45", "personalLess60", "person
                    "carryingBlue", "carryingBrown", "carryingGreen", "carryingGrey", "carryingOrange", "carryingPink",
                    "carryingPurple", "carryingRed", "carryingWhite", "carryingYellow"]
 
+FORCE_TO_CPU = False
+IMAGE_SEARCH_SCORE_THRESHOLD = 0.8
 
 class AttrRecogModel:
     def __init__(self):
@@ -112,8 +114,9 @@ class AttrRecogModel:
             sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
             # if score[0, idx] >= 0:
             #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
-            print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
-            result[self.args.att_list[idx]] = sigmoid_score
+            if sigmoid_score > IMAGE_SEARCH_SCORE_THRESHOLD:
+                print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
+                result[self.args.att_list[idx]] = sigmoid_score
 
         # show the score in the image
         img = img.resize(size=(256, 512), resample=Image.BILINEAR)
@@ -124,9 +127,10 @@ class AttrRecogModel:
                 orgin_score = score[0, idx]
                 sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
                 # txt = '%s: %.2f' % (cfg.att_list[idx], score[0, idx])
-                txt = '%s: %.5f' % (self.args.att_list[idx], sigmoid_score)
-                draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
-                positive_cnt += 1
+                if sigmoid_score > IMAGE_SEARCH_SCORE_THRESHOLD:
+                    txt = '%s: %.5f' % (self.args.att_list[idx], sigmoid_score)
+                    draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
+                    positive_cnt += 1
         # img.save('./static/uploads/00003_predicted.png')
         img.save(path + output_image)
 
