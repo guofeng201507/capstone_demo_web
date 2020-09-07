@@ -234,12 +234,14 @@ def mass_load_images():
 def load_images_from_directory(image_data_path="./static/PA100K/"):
     start = time.time()
     # image_data_path = "./static/PA100K/"
+    if image_data_path[-1] != '/':
+        image_data_path = image_data_path + '/'
     image_files = [f for f in os.listdir(image_data_path) if f[-4:] == '.jpg' or f[-4:] == '.png']
     print(f'Mass loading started for {len(image_files)} images')
     df = pd.DataFrame()
     conn = get_db()
     i = 0
-    for f in tqdm(image_files[:5]):
+    for f in tqdm(image_files):
         image_file = image_data_path + f
         result = model.predict_image_general(image_file)
         detected_attributes = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
