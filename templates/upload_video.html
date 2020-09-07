@@ -1,0 +1,27 @@
+<!doctype html>
+<title>Python Flask File Upload Example</title>
+<h2>Upload a pedestrain video</h2>
+<h3>Note: too large videos will not be accepted</h3>
+<p>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+</p>
+<form method="post" action="/upload_video" enctype="multipart/form-data">
+    <dl>
+        <p>
+            <input type="file" name="file" accept="video/*" required>
+        </p>
+    </dl>
+    <p>
+        <input type="submit" value="Submit">
+    </p>
+</form>
+
+<!--<button type="button" action="/">Return</button></!>-->

@@ -15,3 +15,5 @@ torch==1.5.0+cu101
 torchsummary==1.5.1
 torchvision==0.6.0+cu101
 Werkzeug==1.0.1
+imutils==0.5.3
+opencv-python==4.4.0

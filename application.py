@@ -8,23 +8,96 @@ from tqdm import tqdm
 import pandas as pd
 from flask import Flask, render_template, request, flash, redirect, url_for, g
 from werkzeug.utils import secure_filename
+import cv2
+import os
+import numpy as np
+from imutils.object_detection import non_max_suppression
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_VIDEO_EXTENSIONS = set(['mp4', 'jpg'])
 UPLOAD_FOLDER = './static/uploads/'
+video_split_nth_frame = 20
+video_split_resize_width = 192
+video_split_resize_height = 256
+
+
+
 
 SCORE_THRESHOLD = 0.5
 
 
 # https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def sample_video_crop_pedestrian_images(video_name, video_folder, output_folder, 
+                                        hog, nth_frame, resize_width, resize_height, show=False):
+    video_file = os.path.join(video_folder, video_name)
+    video_base_name = video_name.split(".")[0]
+    
+    image_id = 1
+    count = 0
+    cap = cv2.VideoCapture(video_file)
+
+    # Check if camera opened successfully
+    if (cap.isOpened()== False): 
+        print("Error opening video stream or file")
+
+    # Read until video is completed
+    while(cap.isOpened()):
+
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        count += 1
+
+        if ret == True:
+            if count%nth_frame==0:
+                #width, height = (720, 480)
+                #frame = cv2.resize(frame, (width, height), interpolation = cv2.INTER_AREA)
+
+                (rects, weights) = hog.detectMultiScale(frame, winStride=(4, 4), padding=(8, 8), scale=1.05)
+                # apply non-maxima suppression to the bounding boxes using a
+                # fairly large overlap threshold to try to maintain overlapping
+                # boxes that are still people
+                rects = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rects])
+                pick = non_max_suppression(rects, probs=None, overlapThresh=0.10)
+
+                for (xA, yA, xB, yB) in pick:
+                    frame_crop = frame[yA:yB, xA:xB]
+                    image_id_str = str(image_id).zfill(5)
+                    full_image_name = "_".join([video_base_name, image_id_str])+".png"
+                    image_id += 1
+
+                    #resize_width, resize_height = 192, 256 
+                    frame_crop = cv2.resize(frame_crop, (resize_width, resize_height), interpolation = cv2.INTER_AREA)
+                    # Write out the cropped image
+                    cv2.imwrite(os.path.join(output_folder, full_image_name), frame_crop) 
+                
+                if show:
+                    frame_plot = frame.copy()
+                    for (xA, yA, xB, yB) in pick:
+                        cv2.rectangle(frame_plot, (xA, yA), (xB, yB), (0, 255, 0), 2)
+
+                    # show the output images
+                    cv2.imshow("Detected Pedestrians", frame_plot)
+
+                    # Press Q on keyboard to  exit
+                    if cv2.waitKey(25) & 0xFF == ord('q'):
+                        break
+                        
+    # When everything done, release the video capture object
+    cap.release()
+
+    # Closes all the frames
+    cv2.destroyAllWindows()
+
+
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 app = Flask(__name__)
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024
 
 from pedestrian_attri_recog_model import AttrRecogModel
 
@@ -83,7 +156,7 @@ def upload_image():
         flash('No image selected for uploading')
         return redirect(request.url)
 
-    if file and allowed_file(file.filename):
+    if file and allowed_file(file.filename, ALLOWED_EXTENSIONS):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # print('upload_image filename: ' + filename)
@@ -95,9 +168,50 @@ def upload_image():
 
         return render_template('upload.html', filename=filename, attributes=detected_attributes)
     else:
-        flash('Allowed image types are -> png, jpg, jpeg, gif')
+        flash('Allowed image types are -> %s' %(', '.join(list(ALLOWED_EXTENSIONS))))
         return redirect(request.url)
 
+@app.route('/upload_video')
+def upload_video_form():
+    return render_template('upload_video.html')
+
+
+@app.route('/upload_video', methods=['POST', 'GET'])
+def upload_video():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    
+    file = request.files['file']
+    if file.filename == '':
+        flash('No video selected for uploading')
+        return redirect(request.url)
+    
+    if file and allowed_file(file.filename, ALLOWED_VIDEO_EXTENSIONS):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('Video successfully uploaded and displayed')
+
+        hog = cv2.HOGDescriptor()
+        hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector()) 
+        
+        #nth_frame = 10
+        #resize_width = 192
+        #resize_height = 256
+
+        video_name = filename
+        video_folder = UPLOAD_FOLDER
+        output_folder = os.path.join(UPLOAD_FOLDER, filename.split(".")[0])
+
+        # Create the folder if it doesn't exist
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+        sample_video_crop_pedestrian_images(video_name, video_folder, output_folder, hog, video_split_nth_frame, video_split_resize_width, video_split_resize_height, False)
+
+        return render_template('upload_video.html')
+    else:
+        flash('Allowed video types are -> %s' %(', '.join(list(ALLOWED_VIDEO_EXTENSIONS)))) 
+        return redirect(request.url)
 
 @app.route('/display/<filename>')
 def display_image(filename):
