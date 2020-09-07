@@ -79,7 +79,8 @@ def sample_video_crop_pedestrian_images(video_name, video_folder, output_folder,
                     # Press Q on keyboard to  exit
                     if cv2.waitKey(25) & 0xFF == ord('q'):
                         break
-
+        else:
+            break
     # When everything done, release the video capture object
     cap.release()
 
