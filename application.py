@@ -172,7 +172,9 @@ def upload_image():
 
         detected_attributes = list({k: v for k, v in result.items() if v > SCORE_THRESHOLD}.keys())
 
-        return render_template('upload.html', filename=filename, attributes=detected_attributes)
+        detected_attributes_score = {k: v for k, v in result.items() if v > SCORE_THRESHOLD}
+        return render_template('upload.html', filename=filename, attributes=detected_attributes,
+                               attributes_score=detected_attributes_score)
     else:
         flash('Allowed image types are -> %s' % (', '.join(list(ALLOWED_EXTENSIONS))))
         return redirect(request.url)
@@ -371,7 +373,7 @@ def search_by_image():
 
 def query_db_based_on_attributes(selected_fields):
     new_list = []
-    for field in selected_fields[:10]: #Use top 10 attributes detected
+    for field in selected_fields[:10]:  # Use top 10 attributes detected
         new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
     query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE_DEMO WHERE " + condition_string + " LIMIT 20"

@@ -127,8 +127,8 @@ class AttrRecogModel:
                 sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
                 # txt = '%s: %.2f' % (cfg.att_list[idx], score[0, idx])
                 if sigmoid_score > IMAGE_SEARCH_SCORE_THRESHOLD:
-                    txt = '%s: %.5f' % (self.args.att_list[idx], sigmoid_score)
-                    draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
+                    # txt = '%s: %.5f' % (self.args.att_list[idx], sigmoid_score)
+                    # draw.text((10, 10 + 10 * positive_cnt), txt, (255, 0, 0))
                     positive_cnt += 1
         # img.save('./static/uploads/00003_predicted.png')
         img.save(path + output_image)

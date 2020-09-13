@@ -31,18 +31,48 @@
 
     {% if filename %}
     <div>
-        <img src="{{ url_for('display_image', filename=filename) }}">
-        <form method="post" action="/search_by_image" enctype="multipart/form-data">
-            <p>
-                <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
-
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Search with the above attributes">
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="{{ url_for('display_image', filename=filename) }}">
+            </div>
+            <div class="col-sm-4">
+                <div>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Attribute</th>
+                            <th scope="col">Score</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {%for key in attributes_score.keys()%}
+                        <tr>
+                            <td class="col-md-3">{{ key }}</td>
+                            <td class="col-md-2">{{ attributes_score[key]}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
 
-            </p>
-        </form>
+                <div>
+                    <form method="post" action="/search_by_image" enctype="multipart/form-data">
+                        <p>
+                            <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Search with the above attributes">
+                        </div>
+
+                        </p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
 
     {% endif %}
 
