@@ -371,7 +371,7 @@ def search_by_image():
 
 def query_db_based_on_attributes(selected_fields):
     new_list = []
-    for field in selected_fields[:5]:
+    for field in selected_fields[:10]: #Use top 10 attributes detected
         new_list.append(field + " > " + str(SCORE_THRESHOLD))
     condition_string = " and ".join(new_list)
     query = "SELECT IMAGE_ID, attributes from TB_BIG_TABLE_DEMO WHERE " + condition_string + " LIMIT 20"
