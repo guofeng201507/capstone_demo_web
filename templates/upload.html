@@ -17,17 +17,7 @@
     {% endif %}
     {% endwith %}
     </p>
-    {% if filename %}
-    <div>
-        <img src="{{ url_for('display_image', filename=filename) }}">
-        <form method="post" action="/search_by_image" enctype="multipart/form-data">
-            <p>
-                <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
-                <input type="submit" class="btn btn-primary" value="Search with the above attributes">
-            </p>
-        </form>
-    </div>
-    {% else %}
+
     <form method="post" action="/upload" enctype="multipart/form-data">
         <dl>
             <p>
@@ -39,7 +29,23 @@
         </p>
     </form>
 
+    {% if filename %}
+    <div>
+        <img src="{{ url_for('display_image', filename=filename) }}">
+        <form method="post" action="/search_by_image" enctype="multipart/form-data">
+            <p>
+                <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Search with the above attributes">
+                </div>
+
+            </p>
+        </form>
+    </div>
+
     {% endif %}
+
 
 </div>
 {% endblock %}
