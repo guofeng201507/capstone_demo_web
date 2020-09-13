@@ -40,7 +40,7 @@ FULL_ATTRIBUTES = ["personalLess30", "personalLess45", "personalLess60", "person
                    "carryingBlue", "carryingBrown", "carryingGreen", "carryingGrey", "carryingOrange", "carryingPink",
                    "carryingPurple", "carryingRed", "carryingWhite", "carryingYellow"]
 
-FORCE_TO_CPU = False
+FORCE_TO_CPU = True
 IMAGE_SEARCH_SCORE_THRESHOLD = 0.8
 
 class AttrRecogModel:
