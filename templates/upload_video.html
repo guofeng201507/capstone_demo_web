@@ -21,12 +21,25 @@
     <form method="post" action="/upload_video" enctype="multipart/form-data">
         <dl>
             <p>
-                <input type="file" class="form-control-file border"  name="file" accept="video/*" required>
+                <input type="file" class="form-control-file border" name="file" accept="video/*" required>
             </p>
         </dl>
         <p>
             <input type="submit" class="btn btn-primary" value="Submit">
         </p>
     </form>
+
+    {% if filename %}
+        {% if error_msg %}
+            <div class="alert alert-danger">
+                <strong>Error</strong> Exception happened.
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                <strong>Success</strong> Video has been processed and DB has been updated.
+            </div>
+        {% endif %}
+    {% endif %}
+
 </div>
 {% endblock %}

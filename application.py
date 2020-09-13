@@ -217,8 +217,19 @@ def upload_video():
                                             video_split_resize_width, video_split_resize_height, False)
 
         load_images_from_directory(output_folder)
+        # Move the images to master image folder and remove this tmp folder
+        error_msg = ''
+        try:
+            for f in os.listdir(output_folder):
+                image_file = output_folder + '/' + f
+                target_file = './static/PA100K/' + f
+                os.rename(image_file, target_file)
+            os.rmdir(output_folder)
+        except Exception as e:
+            error_msg = str(e)
+            print(error_msg)
 
-        return render_template('upload_video.html')
+        return render_template('upload_video.html', filename=filename, error_msg=error_msg)
     else:
         flash('Allowed video types are -> %s' % (', '.join(list(ALLOWED_VIDEO_EXTENSIONS))))
         return redirect(request.url)
@@ -344,9 +355,8 @@ def search():
 
     result = query_db_based_on_attributes(selected_fields)
 
-    # return render_template('image_search_result.html', images_info=result)
-    return render_template('test_base_bs.html', images_info=result)
-
+    return render_template('image_search_result.html', images_info=result)
+    # return render_template('test_base_bs.html', images_info=result)
 
 
 @app.route('/search_by_image/', methods=['POST'])
