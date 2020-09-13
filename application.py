@@ -13,6 +13,8 @@ import os
 import numpy as np
 from imutils.object_detection import non_max_suppression
 
+from flask_bootstrap import Bootstrap
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 ALLOWED_VIDEO_EXTENSIONS = set(['mp4', 'jpg'])
 UPLOAD_FOLDER = './static/uploads/'
@@ -21,6 +23,17 @@ video_split_resize_width = 192
 video_split_resize_height = 256
 
 SCORE_THRESHOLD = 0.5
+
+app = Flask(__name__)
+app.secret_key = "secret key"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024
+
+bootstrap = Bootstrap(app)
+
+from pedestrian_attri_recog_model import AttrRecogModel
+
+model = AttrRecogModel()
 
 
 # https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
@@ -92,16 +105,6 @@ def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
-app = Flask(__name__)
-app.secret_key = "secret key"
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024
-
-from pedestrian_attri_recog_model import AttrRecogModel
-
-model = AttrRecogModel()
-
-
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -137,6 +140,11 @@ def close_connection(exception):
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/walala')
+def walala():
+    return render_template('test_base_bs.html')
 
 
 @app.route('/upload')
@@ -336,7 +344,9 @@ def search():
 
     result = query_db_based_on_attributes(selected_fields)
 
-    return render_template('image_search_result.html', images_info=result)
+    # return render_template('image_search_result.html', images_info=result)
+    return render_template('test_base_bs.html', images_info=result)
+
 
 
 @app.route('/search_by_image/', methods=['POST'])

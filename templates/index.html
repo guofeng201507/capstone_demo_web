@@ -1,21 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='home.css')}}"/>
-</head>
-<body>
-<div class="content">
-    <h1>Welcome to Pedestrian Attribute Detection System</h1>
+{% extends "base.html" %}
 
-    <div style="margin-top: 5%">
-        <ul>
-            <li><a href="/search">Search Pedestrains by Selecting Attributes</a></li>
-            <li><a href="/upload">Search Pedestrains by Uploading an Image</a></li>
-	    <li><a href="/upload_video">Search Pedestrains by Uploading a Video</a></li>
-        </ul>
+{% block title %}Index{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+    <h1>Pedestrian Attribute Detection System</h1>
+    <p>Recognize and search the pedestrains by attributes!</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <a href="/search"><h3>Search by Exact Attributes</h3></a>
+            <p>You will be able to search the pedestrain by specifying the exact attributes such as: Gender, Hair Color,
+                Clothes</p>
+        </div>
+        <div class="col-sm-4">
+            <a href="/upload"><h3>Search by Image</h3></a>
+            <p>Upload the pedestrain image of your interest, our system will detect and search in the database for
+                pedestrains with same attributes</p>
+        </div>
+        <div class="col-sm-4">
+            <a href="/upload_video"><h3>Upload pedestrain videos</h3></a>
+            <p>The videos will be framed by system and the pedestrains inside will be identified. Their attributes will
+                be detected and saved to our database for future search</p>
+        </div>
     </div>
 </div>
-</body>
-</html>
+
+{% endblock %}

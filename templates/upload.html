@@ -1,37 +1,45 @@
-<!doctype html>
-<title>Python Flask File Upload Example</title>
-<h2>Upload an pedestrain image you want to search</h2>
-<p>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-<ul class=flashes>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-</p>
-{% if filename %}
-<div>
-    <img src="{{ url_for('display_image', filename=filename) }}">
-    <form method="post" action="/search_by_image" enctype="multipart/form-data">
+{% extends "base.html" %}
+
+
+{% block title %}Upload Image{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Upload an pedestrain image you want to search</h2>
+    <p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    </p>
+    {% if filename %}
+    <div>
+        <img src="{{ url_for('display_image', filename=filename) }}">
+        <form method="post" action="/search_by_image" enctype="multipart/form-data">
+            <p>
+                <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
+                <input type="submit" class="btn btn-primary" value="Search with the above attributes">
+            </p>
+        </form>
+    </div>
+    {% else %}
+    <form method="post" action="/upload" enctype="multipart/form-data">
+        <dl>
+            <p>
+                <input type="file" class="form-control-file border" name="file" autocomplete="off" required>
+            </p>
+        </dl>
         <p>
-            <input id="attributes" name="attributes" required type="hidden" value="{{attributes}}">
-            <input type="submit" value="Search with the above attributes">
+            <input type="submit" class="btn btn-primary" value="Submit">
         </p>
     </form>
-</div>
-{% else %}
-<form method="post" action="/upload" enctype="multipart/form-data">
-    <dl>
-        <p>
-            <input type="file" name="file" autocomplete="off" required>
-        </p>
-    </dl>
-    <p>
-        <input type="submit" value="Submit">
-    </p>
-</form>
 
-{% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}

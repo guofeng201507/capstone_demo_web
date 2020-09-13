@@ -1,24 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-{% for info in images_info %}
-<div style="width: 100%; display: flex;">
-    <div style="flex: 0 0 18%">
-        <img src="{{ url_for('display_searched_image', filename=info['image_id']) }}">
-    </div>
-    <div style="flex: 1">
-        {% for attri in info['attr_list'] %}
+{% block title %}Upload Video{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for info in images_info %}
+    <div style="width: 100%; display: flex;">
+        <div style="flex: 0 0 18%">
+            <img src="{{ url_for('display_searched_image', filename=info['image_id']) }}">
+        </div>
+        <div style="flex: 1">
+            {% for attri in info['attr_list'] %}
             <div> {{attri}}</div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
+    <hr>
+    {% endfor %}
 </div>
-<hr>
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}

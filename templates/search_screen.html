@@ -1,167 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search by Attributes</title>
+{% extends "base.html" %}
 
-</head>
-<body>
-<form method="post" action="/search/">
-    <fieldset>
-        <legend>Accessory</legend>
-        <input type="checkbox" name="accessory" value="accessoryHairBand">HairBand
-        <input type="checkbox" name="accessory" value="accessoryHat">Hat
-        <input type="checkbox" name="accessory" value="accessoryHeadphone">Headphone
-        <input type="checkbox" name="accessory" value="accessoryKerchief">Kerchief
-        <input type="checkbox" name="accessory" value="accessoryMuffler">Muffler
-        <input type="checkbox" name="accessory" value="accessoryNothing">Nothing
-        <input type="checkbox" name="accessory" value="accessorySunglasses">Sunglasses
+{% block title %}Search by Attributes{% endblock %}
 
-        <br>
-    </fieldset>
+{% block content %}
+<div class="container">
+    <h2>Select the attributes you want to search</h2>
+    <form method="post" action="/search/">
+        <div class="form-group">
+            <fieldset>
+                <legend>Accessory</legend>
 
-    <fieldset>
-        <legend>Carrying</legend>
-        <input type="checkbox" name="carrying" value="carryingBabyBuggy">BabyBuggy
-        <input type="checkbox" name="carrying" value="carryingBackpack">Backpack
-        <input type="checkbox" name="carrying" value="carryingBlack">Black
-        <input type="checkbox" name="carrying" value="carryingBlue">Blue
-        <input type="checkbox" name="carrying" value="carryingBrown">Brown
-        <input type="checkbox" name="carrying" value="carryingFolder">Folder
-        <input type="checkbox" name="carrying" value="carryingGreen">Green
-        <input type="checkbox" name="carrying" value="carryingGrey">Grey
-        <input type="checkbox" name="carrying" value="carryingLuggageCase">LuggageCase
-        <input type="checkbox" name="carrying" value="carryingMessengerBag">MessengerBag
-        <input type="checkbox" name="carrying" value="carryingNothing">Nothing
-        <input type="checkbox" name="carrying" value="carryingOrange">Orange
-        <input type="checkbox" name="carrying" value="carryingOther">Other
-        <input type="checkbox" name="carrying" value="carryingPink">Pink
-        <input type="checkbox" name="carrying" value="carryingPlasticBags">PlasticBags
-        <input type="checkbox" name="carrying" value="carryingPurple">Purple
-        <input type="checkbox" name="carrying" value="carryingRed">Red
-        <input type="checkbox" name="carrying" value="carryingShoppingTro">ShoppingTro
-        <input type="checkbox" name="carrying" value="carryingSuitcase">Suitcase
-        <input type="checkbox" name="carrying" value="carryingUmbrella">Umbrella
-        <input type="checkbox" name="carrying" value="carryingWhite">White
-        <input type="checkbox" name="carrying" value="carryingYellow">Yellow
-        <br>
-    </fieldset>
+                <input type="checkbox" name="accessory" value="accessoryHairBand">HairBand
+                <input type="checkbox" name="accessory" value="accessoryHat">Hat
+                <input type="checkbox" name="accessory" value="accessoryHeadphone">Headphone
+                <input type="checkbox" name="accessory" value="accessoryKerchief">Kerchief
+                <input type="checkbox" name="accessory" value="accessoryMuffler">Muffler
+                <input type="checkbox" name="accessory" value="accessoryNothing">Nothing
+                <input type="checkbox" name="accessory" value="accessorySunglasses">Sunglasses
+                <br>
+            </fieldset>
+        </div>
 
-    <fieldset>
-        <legend>Footwear</legend>
-        <input type="checkbox" name="footwear" value="footwearBlack">Black
-        <input type="checkbox" name="footwear" value="footwearBlue">Blue
-        <input type="checkbox" name="footwear" value="footwearBoots">Boots
-        <input type="checkbox" name="footwear" value="footwearBrown">Brown
-        <input type="checkbox" name="footwear" value="footwearGreen">Green
-        <input type="checkbox" name="footwear" value="footwearGrey">Grey
-        <input type="checkbox" name="footwear" value="footwearLeatherShoes">LeatherShoes
-        <input type="checkbox" name="footwear" value="footwearOrange">Orange
-        <input type="checkbox" name="footwear" value="footwearPink">Pink
-        <input type="checkbox" name="footwear" value="footwearPurple">Purple
-        <input type="checkbox" name="footwear" value="footwearRed">Red
-        <input type="checkbox" name="footwear" value="footwearSandals">Sandals
-        <input type="checkbox" name="footwear" value="footwearShoes">Shoes
-        <input type="checkbox" name="footwear" value="footwearSneaker">Sneaker
-        <input type="checkbox" name="footwear" value="footwearStocking">Stocking
-        <input type="checkbox" name="footwear" value="footwearWhite">White
-        <input type="checkbox" name="footwear" value="footwearYellow">Yellow
-        <br>
-    </fieldset>
+        <div class="form-group">
 
-    <fieldset>
-        <legend>Hair</legend>
-        <input type="checkbox" name="hair" value="hairBald">Bald
-        <input type="checkbox" name="hair" value="hairBlack">Black
-        <input type="checkbox" name="hair" value="hairBlue">Blue
-        <input type="checkbox" name="hair" value="hairBrown">Brown
-        <input type="checkbox" name="hair" value="hairGreen">Green
-        <input type="checkbox" name="hair" value="hairGrey">Grey
-        <input type="checkbox" name="hair" value="hairLong">Long
-        <input type="checkbox" name="hair" value="hairOrange">Orange
-        <input type="checkbox" name="hair" value="hairPink">Pink
-        <input type="checkbox" name="hair" value="hairPurple">Purple
-        <input type="checkbox" name="hair" value="hairRed">Red
-        <input type="checkbox" name="hair" value="hairShort">Short
-        <input type="checkbox" name="hair" value="hairWhite">White
-        <input type="checkbox" name="hair" value="hairYellow">Yellow
-        <br>
-    </fieldset>
+            <fieldset>
+                <legend>Carrying</legend>
+                <input type="checkbox" name="carrying" value="carryingBabyBuggy">BabyBuggy
+                <input type="checkbox" name="carrying" value="carryingBackpack">Backpack
+                <input type="checkbox" name="carrying" value="carryingBlack">Black
+                <input type="checkbox" name="carrying" value="carryingBlue">Blue
+                <input type="checkbox" name="carrying" value="carryingBrown">Brown
+                <input type="checkbox" name="carrying" value="carryingFolder">Folder
+                <input type="checkbox" name="carrying" value="carryingGreen">Green
+                <input type="checkbox" name="carrying" value="carryingGrey">Grey
+                <input type="checkbox" name="carrying" value="carryingLuggageCase">LuggageCase
+                <input type="checkbox" name="carrying" value="carryingMessengerBag">MessengerBag
+                <input type="checkbox" name="carrying" value="carryingNothing">Nothing
+                <input type="checkbox" name="carrying" value="carryingOrange">Orange
+                <input type="checkbox" name="carrying" value="carryingOther">Other
+                <input type="checkbox" name="carrying" value="carryingPink">Pink
+                <input type="checkbox" name="carrying" value="carryingPlasticBags">PlasticBags
+                <input type="checkbox" name="carrying" value="carryingPurple">Purple
+                <input type="checkbox" name="carrying" value="carryingRed">Red
+                <input type="checkbox" name="carrying" value="carryingShoppingTro">ShoppingTro
+                <input type="checkbox" name="carrying" value="carryingSuitcase">Suitcase
+                <input type="checkbox" name="carrying" value="carryingUmbrella">Umbrella
+                <input type="checkbox" name="carrying" value="carryingWhite">White
+                <input type="checkbox" name="carrying" value="carryingYellow">Yellow
+                <br>
+            </fieldset>
+        </div>
 
-    <fieldset>
-        <legend>LowerBody</legend>
-        <input type="checkbox" name="lowerBody" value="lowerBodyBlack">Black
-        <input type="checkbox" name="lowerBody" value="lowerBodyBlue">Blue
-        <input type="checkbox" name="lowerBody" value="lowerBodyBrown">Brown
-        <input type="checkbox" name="lowerBody" value="lowerBodyCapri">Capri
-        <input type="checkbox" name="lowerBody" value="lowerBodyCasual">Casual
-        <input type="checkbox" name="lowerBody" value="lowerBodyFormal">Formal
-        <input type="checkbox" name="lowerBody" value="lowerBodyGreen">BodyGreen
-        <input type="checkbox" name="lowerBody" value="lowerBodyGrey">Grey
-        <input type="checkbox" name="lowerBody" value="lowerBodyHotPants">HotPants
-        <input type="checkbox" name="lowerBody" value="lowerBodyJeans">Jeans
-        <input type="checkbox" name="lowerBody" value="lowerBodyLongSkirt">LongSkirt
-        <input type="checkbox" name="lowerBody" value="lowerBodyOrange">Orange
-        <input type="checkbox" name="lowerBody" value="lowerBodyPink">Pink
-        <input type="checkbox" name="lowerBody" value="lowerBodyPlaid">Plaid
-        <input type="checkbox" name="lowerBody" value="lowerBodyPurple">Purple
-        <input type="checkbox" name="lowerBody" value="lowerBodyRed">Red
-        <input type="checkbox" name="lowerBody" value="lowerBodyShorts">Shorts
-        <input type="checkbox" name="lowerBody" value="lowerBodyShortSkirt">ShortSkirt
-        <input type="checkbox" name="lowerBody" value="lowerBodySuits">Suits
-        <input type="checkbox" name="lowerBody" value="lowerBodyThinStripes">ThinStripes
-        <input type="checkbox" name="lowerBody" value="lowerBodyTrousers">Trousers
-        <input type="checkbox" name="lowerBody" value="lowerBodyWhite">White
-        <input type="checkbox" name="lowerBody" value="lowerBodyYellow">Yellow
-        <br>
-    </fieldset>
+        <div class="form-group">
+            <fieldset>
+                <legend>Footwear</legend>
+                <input type="checkbox" name="footwear" value="footwearBlack">Black
+                <input type="checkbox" name="footwear" value="footwearBlue">Blue
+                <input type="checkbox" name="footwear" value="footwearBoots">Boots
+                <input type="checkbox" name="footwear" value="footwearBrown">Brown
+                <input type="checkbox" name="footwear" value="footwearGreen">Green
+                <input type="checkbox" name="footwear" value="footwearGrey">Grey
+                <input type="checkbox" name="footwear" value="footwearLeatherShoes">LeatherShoes
+                <input type="checkbox" name="footwear" value="footwearOrange">Orange
+                <input type="checkbox" name="footwear" value="footwearPink">Pink
+                <input type="checkbox" name="footwear" value="footwearPurple">Purple
+                <input type="checkbox" name="footwear" value="footwearRed">Red
+                <input type="checkbox" name="footwear" value="footwearSandals">Sandals
+                <input type="checkbox" name="footwear" value="footwearShoes">Shoes
+                <input type="checkbox" name="footwear" value="footwearSneaker">Sneaker
+                <input type="checkbox" name="footwear" value="footwearStocking">Stocking
+                <input type="checkbox" name="footwear" value="footwearWhite">White
+                <input type="checkbox" name="footwear" value="footwearYellow">Yellow
+                <br>
+            </fieldset>
+        </div>
 
-    <fieldset>
-        <legend>Personal</legend>
-        <input type="checkbox" name="personal" value="personalMale">Male
-        <input type="checkbox" name="personal" value="personalFemale">Female
-        <input type="checkbox" name="personal" value="personalLarger60">Larger60
-        <input type="checkbox" name="personal" value="personalLess15">Less15
-        <input type="checkbox" name="personal" value="personalLess30">Less30
-        <input type="checkbox" name="personal" value="personalLess45">Less45
-        <input type="checkbox" name="personal" value="personalLess60">Less60
-        <br>
-    </fieldset>
+        <div class="form-group">
+            <fieldset>
+                <legend>Hair</legend>
+                <input type="checkbox" name="hair" value="hairBald">Bald
+                <input type="checkbox" name="hair" value="hairBlack">Black
+                <input type="checkbox" name="hair" value="hairBlue">Blue
+                <input type="checkbox" name="hair" value="hairBrown">Brown
+                <input type="checkbox" name="hair" value="hairGreen">Green
+                <input type="checkbox" name="hair" value="hairGrey">Grey
+                <input type="checkbox" name="hair" value="hairLong">Long
+                <input type="checkbox" name="hair" value="hairOrange">Orange
+                <input type="checkbox" name="hair" value="hairPink">Pink
+                <input type="checkbox" name="hair" value="hairPurple">Purple
+                <input type="checkbox" name="hair" value="hairRed">Red
+                <input type="checkbox" name="hair" value="hairShort">Short
+                <input type="checkbox" name="hair" value="hairWhite">White
+                <input type="checkbox" name="hair" value="hairYellow">Yellow
+                <br>
+            </fieldset>
+        </div>
+        <div class="form-group">
 
-    <fieldset>
-        <legend>UpperBody</legend>
-        <input type="checkbox" name="upperBody" value="upperBodyBlack">Black
-        <input type="checkbox" name="upperBody" value="upperBodyBlue">Blue
-        <input type="checkbox" name="upperBody" value="upperBodyBrown">Brown
-        <input type="checkbox" name="upperBody" value="upperBodyCasual">Casual
-        <input type="checkbox" name="upperBody" value="upperBodyFormal">Formal
-        <input type="checkbox" name="upperBody" value="upperBodyGreen">Green
-        <input type="checkbox" name="upperBody" value="upperBodyGrey">Grey
-        <input type="checkbox" name="upperBody" value="upperBodyJacket">Jacket
-        <input type="checkbox" name="upperBody" value="upperBodyLogo">Logo
-        <input type="checkbox" name="upperBody" value="upperBodyLongSleeve">LongSleeve
-        <input type="checkbox" name="upperBody" value="upperBodyNoSleeve">NoSleeve
-        <input type="checkbox" name="upperBody" value="upperBodyOrange">Orange
-        <input type="checkbox" name="upperBody" value="upperBodyOther">Other
-        <input type="checkbox" name="upperBody" value="upperBodyPink">Pink
-        <input type="checkbox" name="upperBody" value="upperBodyPlaid">Plaid
-        <input type="checkbox" name="upperBody" value="upperBodyPurple">Purple
-        <input type="checkbox" name="upperBody" value="upperBodyRed">Red
-        <input type="checkbox" name="upperBody" value="upperBodyShortSleeve">ShortSleeve
-        <input type="checkbox" name="upperBody" value="upperBodySuit">Suit
-        <input type="checkbox" name="upperBody" value="upperBodySweater">Sweater
-        <input type="checkbox" name="upperBody" value="upperBodyThickStripes">ThickStripes
-        <input type="checkbox" name="upperBody" value="upperBodyThinStripes">ThinStripes
-        <input type="checkbox" name="upperBody" value="upperBodyTshirt">Tshirt
-        <input type="checkbox" name="upperBody" value="upperBodyVNeck">VNeck
-        <input type="checkbox" name="upperBody" value="upperBodyWhite">White
-        <input type="checkbox" name="upperBody" value="upperBodyYellow">Yellow
-        <br>
-    </fieldset>
+            <fieldset>
+                <legend>LowerBody</legend>
+                <input type="checkbox" name="lowerBody" value="lowerBodyBlack">Black
+                <input type="checkbox" name="lowerBody" value="lowerBodyBlue">Blue
+                <input type="checkbox" name="lowerBody" value="lowerBodyBrown">Brown
+                <input type="checkbox" name="lowerBody" value="lowerBodyCapri">Capri
+                <input type="checkbox" name="lowerBody" value="lowerBodyCasual">Casual
+                <input type="checkbox" name="lowerBody" value="lowerBodyFormal">Formal
+                <input type="checkbox" name="lowerBody" value="lowerBodyGreen">BodyGreen
+                <input type="checkbox" name="lowerBody" value="lowerBodyGrey">Grey
+                <input type="checkbox" name="lowerBody" value="lowerBodyHotPants">HotPants
+                <input type="checkbox" name="lowerBody" value="lowerBodyJeans">Jeans
+                <input type="checkbox" name="lowerBody" value="lowerBodyLongSkirt">LongSkirt
+                <input type="checkbox" name="lowerBody" value="lowerBodyOrange">Orange
+                <input type="checkbox" name="lowerBody" value="lowerBodyPink">Pink
+                <input type="checkbox" name="lowerBody" value="lowerBodyPlaid">Plaid
+                <input type="checkbox" name="lowerBody" value="lowerBodyPurple">Purple
+                <input type="checkbox" name="lowerBody" value="lowerBodyRed">Red
+                <input type="checkbox" name="lowerBody" value="lowerBodyShorts">Shorts
+                <input type="checkbox" name="lowerBody" value="lowerBodyShortSkirt">ShortSkirt
+                <input type="checkbox" name="lowerBody" value="lowerBodySuits">Suits
+                <input type="checkbox" name="lowerBody" value="lowerBodyThinStripes">ThinStripes
+                <input type="checkbox" name="lowerBody" value="lowerBodyTrousers">Trousers
+                <input type="checkbox" name="lowerBody" value="lowerBodyWhite">White
+                <input type="checkbox" name="lowerBody" value="lowerBodyYellow">Yellow
+                <br>
+            </fieldset>
+        </div>
+        <div class="form-group">
 
+            <fieldset>
+                <legend>Personal</legend>
+                <input type="checkbox" name="personal" value="personalMale">Male
+                <input type="checkbox" name="personal" value="personalFemale">Female
+                <input type="checkbox" name="personal" value="personalLarger60">Larger60
+                <input type="checkbox" name="personal" value="personalLess15">Less15
+                <input type="checkbox" name="personal" value="personalLess30">Less30
+                <input type="checkbox" name="personal" value="personalLess45">Less45
+                <input type="checkbox" name="personal" value="personalLess60">Less60
+                <br>
+            </fieldset>
+        </div>
 
-    <input type="submit" value="Search now"/>
+        <div class="form-group">
 
-</form>
-</body>
-</html>
+            <fieldset>
+                <legend>UpperBody</legend>
+                <input type="checkbox" name="upperBody" value="upperBodyBlack">Black
+                <input type="checkbox" name="upperBody" value="upperBodyBlue">Blue
+                <input type="checkbox" name="upperBody" value="upperBodyBrown">Brown
+                <input type="checkbox" name="upperBody" value="upperBodyCasual">Casual
+                <input type="checkbox" name="upperBody" value="upperBodyFormal">Formal
+                <input type="checkbox" name="upperBody" value="upperBodyGreen">Green
+                <input type="checkbox" name="upperBody" value="upperBodyGrey">Grey
+                <input type="checkbox" name="upperBody" value="upperBodyJacket">Jacket
+                <input type="checkbox" name="upperBody" value="upperBodyLogo">Logo
+                <input type="checkbox" name="upperBody" value="upperBodyLongSleeve">LongSleeve
+                <input type="checkbox" name="upperBody" value="upperBodyNoSleeve">NoSleeve
+                <input type="checkbox" name="upperBody" value="upperBodyOrange">Orange
+                <input type="checkbox" name="upperBody" value="upperBodyOther">Other
+                <input type="checkbox" name="upperBody" value="upperBodyPink">Pink
+                <input type="checkbox" name="upperBody" value="upperBodyPlaid">Plaid
+                <input type="checkbox" name="upperBody" value="upperBodyPurple">Purple
+                <input type="checkbox" name="upperBody" value="upperBodyRed">Red
+                <input type="checkbox" name="upperBody" value="upperBodyShortSleeve">ShortSleeve
+                <input type="checkbox" name="upperBody" value="upperBodySuit">Suit
+                <input type="checkbox" name="upperBody" value="upperBodySweater">Sweater
+                <input type="checkbox" name="upperBody" value="upperBodyThickStripes">ThickStripes
+                <input type="checkbox" name="upperBody" value="upperBodyThinStripes">ThinStripes
+                <input type="checkbox" name="upperBody" value="upperBodyTshirt">Tshirt
+                <input type="checkbox" name="upperBody" value="upperBodyVNeck">VNeck
+                <input type="checkbox" name="upperBody" value="upperBodyWhite">White
+                <input type="checkbox" name="upperBody" value="upperBodyYellow">Yellow
+                <br>
+            </fieldset>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Search now"/>
+        </div>
+    </form>
+</div>
+{% endblock %}
