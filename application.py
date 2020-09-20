@@ -31,7 +31,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024
 
 bootstrap = Bootstrap(app)
 
-from pedestrian_attri_recog_model import AttrRecogModel
+from pedestrian_attri_recog_model_dpn import AttrRecogModel
 
 model = AttrRecogModel()
 
