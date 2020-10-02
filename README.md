@@ -9,8 +9,8 @@ https://github.com/guofeng201507/capstone_demo_web.git
 
 #### 4. Start the flask application by executing application.py
 
-#### 5. Trigger /init_big_table to get the Sqlite Database created.
+#### 5. Trigger http://localhost:5000/init_big_table to get the Sqlite Database created.
 
-#### 6. Execute /mass_load api to mass load all the pedestrian images inside the specific folder (Please specify the path in the code) into the central database, wait for it to finish. (100K images took 5 hours as per our testing)
+#### 6. Execute http://localhost:5000/mass_load api to mass load all the pedestrian images inside the specific folder (Please specify the path in the code) into the central database, wait for it to finish. (100K images took 5 hours as per our testing)
 
 #### 7. System is loaded with initial datasets and ready for service.
