@@ -1,4 +1,4 @@
-# How to setup the pedestrian attribute management system:
+# How to setup the Pedestrian Attribute Recognition System:
 
 
 #### 1. Download the source code from github:
