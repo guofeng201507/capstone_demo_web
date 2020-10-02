@@ -5,7 +5,7 @@
 https://github.com/guofeng201507/capstone_demo_web.git
 #### 2. Install all the libraries from requirements.txt
 
-#### 3. Copy the pedestrian detection model weights file (.pth) into the directory ./trained_weights/PETA/img_model, make sure the model name matches the name used in the program pedestrian_attri_recog_model.py
+#### 3. Copy the pedestrian detection model weights file (.pth) into the directory ./trained_weights/PETA/img_model, make sure the model name matches the name used in the program pedestrian_attri_recog_model_dpn.py
 
 #### 4. Start the flask application by executing application.py
 
