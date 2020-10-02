@@ -1,5 +1,7 @@
 .idea
 venv
 data/images
+static/PA100K
+static/uploads
 trained_weights
 db
