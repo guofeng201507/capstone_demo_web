@@ -11,6 +11,8 @@ https://github.com/guofeng201507/capstone_demo_web.git
 
 #### 5. Copy the demo_new.db file from shared Google Drive into project directory "db"
 
+#### 6. Copy the PA100K images from shared Google Drive into project directory "./static/PA100K"
+
 ### Option A: Use the existing pedestrain attributes DB
 ####     No Action required, system is ready for service
 
