@@ -9,7 +9,7 @@ https://github.com/guofeng201507/capstone_demo_web.git
 
 #### 4. Start the flask application by executing application.py
 
-#### 5. Copy the demo_new.db file from directory "BACKUP_FILES" into directory "db"
+#### 5. Copy the demo_new.db file from shared Google Drive into project directory "db"
 
 ### Option A: Use the existing pedestrain attributes DB
 ####     No Action required, system is ready for service
