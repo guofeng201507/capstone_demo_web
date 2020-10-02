@@ -42,11 +42,10 @@ FULL_ATTRIBUTES = ["personalLess30", "personalLess45", "personalLess60", "person
                    "carryingSuitcase", "lowerBodySuits", "upperBodySweater", "upperBodyThickStripes", "carryingBlack",
                    "carryingBlue", "carryingBrown", "carryingGreen", "carryingGrey", "carryingOrange", "carryingPink",
                    "carryingPurple", "carryingRed", "carryingWhite", "carryingYellow"]
-
+FORCE_TO_CPU = True
 class AttrRecogModel:
     def __init__(self):
         # device = torch.device('cpu')
-        FORCE_TO_CPU = False
         parser = argument_parser()
         args = parser.parse_args(['--model=dpn107'])
 
@@ -112,7 +111,11 @@ class AttrRecogModel:
         img = Image.open(path + input_image)
         img_trans = self.predict_tsfm(img)
         img_trans = torch.unsqueeze(img_trans, dim=0)
-        img_var = Variable(img_trans).cuda()
+
+        if torch.cuda.is_available() and not FORCE_TO_CPU:
+            img_var = Variable(img_trans).cuda()
+        else:
+            img_var = Variable(img_trans)
         score = self.model(img_var).data.cpu().numpy()
 
         # show the score in command line
