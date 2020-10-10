@@ -53,7 +53,7 @@ class AttrRecogModel:
         exp_dir = os.path.join('trained_weights', visenv_name)
         model_dir, log_dir = get_model_log_path(exp_dir)
         stdout_file = os.path.join(log_dir, f'stdout_{time_str()}.txt')
-        save_model_path = os.path.join(model_dir, 'ckpt_max_e0384293_2020-09-17_18-35-21.pth')
+        save_model_path = os.path.join(model_dir, 'dpn107.pth')
 
         if args.redirector:
             print('redirector stdout')
@@ -125,7 +125,7 @@ class AttrRecogModel:
             sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
             # if score[0, idx] >= 0:
             #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
-            print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
+            # print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
             result[self.args.att_list[idx]] = sigmoid_score
 
         # show the score in the image
@@ -160,7 +160,7 @@ class AttrRecogModel:
             sigmoid_score = 1 / (1 + np.exp(-1 * orgin_score))
             # if score[0, idx] >= 0:
             #     print('%s: %.2f' % (cfg.att_list[idx], score[0, idx]))
-            print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
+            # print('%s: %.5f' % (self.args.att_list[idx], sigmoid_score))
             result[self.args.att_list[idx]] = sigmoid_score
 
         return result
